@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        {% for message in messages %} 
+            <div class="alert alert-{{ message.tags }}" role="alert">{{message}}</div> 
+        {% endfor %}
+        <div class="header">
+            <form action="{% url 'logout' %}" method="post" class="link button">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">LOGOUT</button>
+            </form>
+            <div class="links">
+                <a href="{% url 'home' %}" class="link">Home</a>
+                <a href="{% url 'create_todo' %}" class="link">Create todo</a>
+            </div>
+        </div>
+        <div class="main">
+            <div class="todo-list">
+                <h1>List todos</h1>
+                <hr>
+                {% for todo in todos %}
+                    {% if todo.owner_id == request.user.id %}
+                        <div class="todo-item">
+                            <div class="todo-content">
+                                <h3>{{ todo.title }}</h3>
+                                <p>{{ todo.description }}</p>
+                                <p>
+                                    <b>Data created:</b>
+                                    {{ todo.created_at }}
+                                </p>
+                                <p>
+                                    <b>Data created:</b>
+                                    {{ todo.updated_at }}
+                                </p>
+                            </div>
+                            <form method="post" action="{% url 'delete' todo.id %}">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <input type="submit" value="Delete" class="link button">
+                            </form>
+                            <form method="post" action="{% url 'update' todo.id %}">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <input type="submit" value="Update" class="link button">
+                            </form>
+                            <hr>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="links">
+            <a href="{% url 'signup' %}" class="link">SIGNUP</a>
+            <a href="{% url 'login' %}" class="link">LOGIN</a>
+        </div>
+    {% endif %}
+{% endblock %}

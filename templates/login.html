@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Login</h1>
+<form class="container"  method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+    <button class="btn btn-primary" type="submit">Login</button>
+    <a href="{% url 'signup' %}" class="link">Sign up</a>
+</form>
+{% for message in messages %} 
+    <div class="alert alert-{{ message.tags }}" role="alert">{{message}}</div> 
+{% endfor %}
+
+{% endblock %}
